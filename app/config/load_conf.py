@@ -51,7 +51,7 @@ def matchEnvFile() -> str:
 def getAppConfig() -> config.AppConfigSettings:
     """ 获取项目配置 """
     # 解析命令行参数
-    parseCliArgument()
+    # parseCliArgument()
     # 获取配置文件
     envFile = getEnvFile()
     print("获取配置文件: ", envFile)

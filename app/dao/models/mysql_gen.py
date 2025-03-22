@@ -1,4 +1,7 @@
-from sqlalchemy import Column, Index, String, TIMESTAMP, text
+from datetime import datetime
+
+import pytz
+from sqlalchemy import Column, Index, String, TIMESTAMP, text, Integer, Text, Float, DateTime
 from sqlalchemy.dialects.mysql import BIGINT, TINYINT, VARCHAR
 from sqlalchemy.orm import declarative_base
 
@@ -45,3 +48,34 @@ class YmUserInfo(Base):
     delete_at = Column(String(20), nullable=False, server_default=text("''"), comment='删除时间')
     created_at = Column(TIMESTAMP, nullable=False, server_default=text('CURRENT_TIMESTAMP'), comment='创建时间')
     updated_at = Column(TIMESTAMP, nullable=False, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'), comment='更新时间')
+
+class ModelscopeWanTaskInfo(Base):
+    __tablename__ = 'modelscope_wan_task_info'
+    __table_args__ = (
+        {'comment': 'modelscope wan 任务信息表'}
+    )
+    id = Column(Integer, primary_key=True, autoincrement=True, comment='自增主键')
+    hf_token = Column(String(255), comment='api token')
+
+    task_type = Column(String(255), nullable=False, comment='任务类型 i2v | t2v')
+    prompt = Column(Text, comment='提示词')
+    video_size = Column(String(255), nullable=True, default='720*1280',
+                        comment="t2v 视频尺寸 ['1280*720', '960*960', '720*1280', '1088*832', '832*1088']")
+
+    image = Column(String(255), nullable=True, comment="i2v 图片 URL")
+    model_type = Column(String(255), nullable=False,
+                        comment="['wanx2.1-t2v-plus', 'wanx2.1-t2v-turbo'] ['wanx2.1-i2v-plus', 'wanx2.1-i2v-turbo']")
+
+    seed = Column(Float, nullable=False, default=-1, comment="随机种子")
+
+    task_status = Column(String(255), comment="任务状态 pending | progressing | completed")
+    cost_time = Column(Float, comment="处理时间")
+    video_url = Column(String(255), comment="生成的视频 URL")
+
+    is_pushed = Column(String(10), comment="是否推送 0 | 1")
+
+    inst_time = Column(DateTime, default=lambda: datetime.now(pytz.timezone('Asia/Shanghai')), comment='记录创建时间')
+    inst_user_no = Column(String(50), default="Spider", comment='记录创建用户')
+    updt_time = Column(DateTime, default=lambda: datetime.now(pytz.timezone('Asia/Shanghai')),
+                       onupdate=lambda: datetime.now(pytz.timezone('Asia/Shanghai')), comment='记录更新时间')
+    updt_user_no = Column(String(50), default="Spider", onupdate="Spider", comment='记录更新用户')

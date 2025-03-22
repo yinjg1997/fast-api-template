@@ -18,8 +18,8 @@ from app.config import globalAppSettings
 middlewareList = [
     JwtMiddleware,  # jwt
     UseTimeMiddleware,  # 添加耗时请求中间件
-    TokenMiddleware,  # 添加token验证中间件
-    TestMiddleware  # 测试中间件
+    # TokenMiddleware,  # 添加token验证中间件
+    # TestMiddleware  # 测试中间件
 ]
 
 
