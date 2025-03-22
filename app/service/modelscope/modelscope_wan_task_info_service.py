@@ -13,6 +13,7 @@ update_date: 2025/3/22
 file_name: modelscope_wan_task_info_service.py
 """
 from datetime import datetime
+from enum import Enum
 from typing import List, Dict, Optional
 
 import pytz
@@ -23,7 +24,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from app.dao import getDatabaseSession
 from app.dao.models import ModelscopeWanTaskInfo
 
-class TaskStatus:
+class TaskStatus(Enum):
     PENDING = "pending"
     PROCESSING = "processing"
     COMPLETED = "completed"

@@ -30,10 +30,11 @@ def modelscope_wan21_task():
         try:
             task_info = modelscope_wan_task_info_service.get_one_pending_task()
             if task_info:
+                task_info.hf_token = wan_21_api.hf_token
                 # 处理任务
                 if task_info.task_type == TaskType.T2V.value:
                     wan_21_api.switch_t2v_tab()
-                    wan_21_api.t2v_generation_async(prompt=task_info.prompt, size=task_info.task_size,
+                    wan_21_api.t2v_generation_async(prompt=task_info.prompt, size=task_info.video_size,
                                                     model=task_info.model_type, seed=task_info.seed)
                 elif task_info.task_type == TaskType.I2V.value:
                     wan_21_api.switch_i2v_tab()
@@ -47,13 +48,17 @@ def modelscope_wan21_task():
                 # 监听任务进度
                 while True:
                     try:
-                        # cost_time_res = wan_21_api.cost_time()
                         bar_res = wan_21_api.get_process_bar()
-                        status_res = wan_21_api.process_change()
-
                         bar_value = bar_res.get("value")
-                        video_local_path = status_res.get("value", {}).get("video")
-                        if bar_value == 100 and video_local_path:
+                        if bar_value == 100:
+                            cost_time_res = wan_21_api.cost_time()
+                            status_res = wan_21_api.process_change()
+                            status_value = status_res.get("value")
+                            if status_value is None:
+                                logger.warning(f"生成状态为 100, 但是 status_value 为 None")
+                                status_value = {}
+
+                            video_local_path = status_value.get("video", "")
                             logger.info("Background task completed.")
                             """
                             todo
@@ -67,12 +72,12 @@ def modelscope_wan21_task():
                             video_url = ""
                             # delete_file(file_path=video_local_path)
 
-                            task_info.video_url = video_url
+                            task_info.video_url = video_local_path
                             task_info.task_status = TaskStatus.COMPLETED.value
                             modelscope_wan_task_info_service.update(id=task_info.id, item=task_info)
                             break
-
-                        time.sleep(10)
+                        else:
+                            time.sleep(10)
                     except httpx.TimeoutException:
                         logger.info("Request timed out.")
                     except Exception as e:
