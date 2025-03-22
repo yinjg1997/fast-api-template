@@ -19,6 +19,7 @@ from threading import Thread
 import httpx
 from loguru import logger
 
+from app.service.lark_robot.group_robot import LarkGroupRobotService, webhook, secret
 from app.service.modelscope import ModelscopeWanTaskInfoService, TaskStatus
 from app.service.modelscope.wan_2_1 import Wan21Api, TaskType
 from app.utils import change_file_ext, delete_file
@@ -29,6 +30,7 @@ def modelscope_wan21_task():
     wan_21_api = Wan21Api()
     modelscope_wan_task_info_service = ModelscopeWanTaskInfoService()
     s3 = S3()
+    lark_robot_service = LarkGroupRobotService(webhook=webhook, secret=secret)
     while True:
         try:
             task_info = modelscope_wan_task_info_service.get_one_pending_task()
@@ -79,9 +81,16 @@ def modelscope_wan21_task():
 
                             task_info.video_url = video_url
                             task_info.task_status = TaskStatus.COMPLETED.value
+
+                            # 上传至飞书
+                            card = modelscope_wan_task_info_service.make_lark_card(item=task_info)
+                            send_res = lark_robot_service.send_card(card=card)
+                            logger.debug(f"推送 res: {send_res}")
+                            if send_res.get("StatusMessage") == 'success':
+                                task_info.is_pushed = 1
+
                             modelscope_wan_task_info_service.update(id=task_info.id, item=task_info)
 
-                            # todo 上传至飞书
                             break
                         else:
                             time.sleep(10)

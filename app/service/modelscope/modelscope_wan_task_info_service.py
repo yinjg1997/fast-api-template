@@ -24,6 +24,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from app.dao import getDatabaseSession
 from app.dao.models import ModelscopeWanTaskInfo
 
+
 class TaskStatus(Enum):
     PENDING = "pending"
     PROCESSING = "processing"
@@ -35,6 +36,28 @@ class ModelscopeWanTaskInfoService:
     """
     ModelscopeWanTaskInfo 服务类，用于处理 ModelscopeWanTaskInfo 表的数据库操作
     """
+
+    def make_lark_card(self, item: ModelscopeWanTaskInfo) -> Dict:
+        card = {
+            "header": {
+                "template": "blue",
+                "title": {
+                    "content": "生成结果推送",
+                }
+            },
+            "elements": [
+                {
+                    "tag": "div",
+                    "fields": [
+                        {"is_short": False, "text": {"tag": "lark_md", "content": f"**Video URL：**{item.video_url}“"}},
+                        {"is_short": False, "text": {"tag": "lark_md", "content": f"**Cost Time：**{item.cost_time}“"}},
+                        {"is_short": False, "text": {"tag": "lark_md", "content": f"**Prompt：**{item.prompt}“"}},
+                        {"is_short": False, "text": {"tag": "lark_md", "content": f"**Seed：**{item.seed}“"}},
+                    ]
+                }
+            ]
+        }
+        return card
 
     def get_one_pending_task(self) -> Optional[ModelscopeWanTaskInfo]:
         """
