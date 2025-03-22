@@ -51,13 +51,12 @@ def modelscope_wan21_task():
                 modelscope_wan_task_info_service.update(id=task_info.id, item=task_info)
 
                 # 监听任务进度
+                start_time = time.time()
                 while True:
                     try:
-                        start_time = time.time()
                         bar_res = wan_21_api.get_process_bar()
                         bar_value = bar_res.get("value")
                         if bar_value == 100:
-                            cost_time_res = wan_21_api.cost_time()
                             status_res = wan_21_api.process_change()
                             status_value = status_res.get("value")
                             if status_value is None:
@@ -74,7 +73,7 @@ def modelscope_wan21_task():
                             video_local_path = change_file_ext(file_path=video_local_path, basename=uuid_str,
                                                                new_ext='mp4')
                             # 上传至 S3
-                            s3key = video_local_path
+                            s3key = f'{uuid_str}.mp4'
                             video_url = f"{s3_prefix}/{s3key}"
                             s3.upload_file(file_path=video_local_path, object_name=s3key)
                             delete_file(file_path=video_local_path)

@@ -30,6 +30,7 @@ class TaskStatus(Enum):
     PROCESSING = "processing"
     COMPLETED = "completed"
     FAILED = "failed"
+    CANCELLED = "cancelled"
 
 
 class ModelscopeWanTaskInfoService:
@@ -49,10 +50,19 @@ class ModelscopeWanTaskInfoService:
                 {
                     "tag": "div",
                     "fields": [
-                        {"is_short": False, "text": {"tag": "lark_md", "content": f"**Video URL：**{item.video_url}“"}},
-                        {"is_short": False, "text": {"tag": "lark_md", "content": f"**Cost Time：**{item.cost_time}“"}},
-                        {"is_short": False, "text": {"tag": "lark_md", "content": f"**Prompt：**{item.prompt}“"}},
-                        {"is_short": False, "text": {"tag": "lark_md", "content": f"**Seed：**{item.seed}“"}},
+                        {"is_short": False, "text": {"tag": "lark_md", "content": f"**id：**{item.id}"}},
+                        # {"is_short": False, "text": {"tag": "lark_md", "content": f"**hf_token：**{item.hf_token}"}},
+                        {"is_short": False, "text": {"tag": "lark_md", "content": f"**task_type：**{item.task_type}"}},
+                        {"is_short": False, "text": {"tag": "lark_md", "content": f"**prompt：**{item.prompt}"}},
+                        {"is_short": False, "text": {"tag": "lark_md", "content": f"**video_size：**{item.video_size}"}},
+                        {"is_short": False, "text": {"tag": "lark_md", "content": f"**image：**{item.image}"}},
+                        # {"is_short": False, "text": {"tag": "lark_md", "content": f"**model_type：**{item.model_type}"}},
+                        {"is_short": False, "text": {"tag": "lark_md", "content": f"**seed：**{item.seed}"}},
+                        {"is_short": False,
+                         "text": {"tag": "lark_md", "content": f"**task_status：**{item.task_status}"}},
+                        {"is_short": False, "text": {"tag": "lark_md", "content": f"**cost_time：**{item.cost_time}"}},
+                        {"is_short": False, "text": {"tag": "lark_md", "content": f"**video_url：**{item.video_url}"}},
+                        {"is_short": False, "text": {"tag": "lark_md", "content": f"**is_pushed：**{item.is_pushed}"}},
                     ]
                 }
             ]
