@@ -42,7 +42,6 @@ class S3(object):
         self.s3_bucket = session.resource('s3', endpoint_url=s3endpoint).Bucket(bucket_name)
         self.resource = session.resource('s3', endpoint_url=s3endpoint)
         self.q = Queue()
-        print(1111)
 
 
     def _upload_file(self, file_path=None, object_name=None, que=None):

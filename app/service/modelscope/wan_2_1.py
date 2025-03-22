@@ -10,7 +10,7 @@ execute_type: 脚本执行
 execute_hz: 按需执行
 update_user:
 update_date: 2025/3/21
-file_name: Wan_2_1.py
+file_name: wan_2_1.py
 """
 import time
 from enum import Enum
@@ -36,6 +36,10 @@ class Resolution(Enum):
     RES_720x1280 = '720*1280'
     RES_1088x832 = '1088*832'
     RES_832x1088 = '832*1088'
+
+class TaskType(Enum):
+    I2V = 'i2v'
+    T2V = 't2v'
 
 
 class Wan21Api:

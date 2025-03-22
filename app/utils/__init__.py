@@ -11,3 +11,4 @@ from .str_util import StringUtil
 from app.utils.log import logger
 from .jwt_util import *
 from .http_resp import *
+from .file_util import *
