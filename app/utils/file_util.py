@@ -13,10 +13,11 @@ update_date: 2025/3/22
 file_name: file_util.py
 """
 import os
+
 from loguru import logger
 
 
-def change_file_ext(file_path: str, new_ext: str = "mp4"):
+def change_file_ext(file_path: str, basename: str, new_ext: str = "mp4"):
     """
     修改文件扩展名
     """
@@ -24,6 +25,7 @@ def change_file_ext(file_path: str, new_ext: str = "mp4"):
     new_file_path = f"{base}.{new_ext}"
     os.rename(file_path, new_file_path)
     return new_file_path
+
 
 def delete_file(file_path: str):
     """

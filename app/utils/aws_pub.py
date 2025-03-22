@@ -16,17 +16,18 @@ import os
 import threading
 from pathlib import Path
 from queue import Queue
+
 from boto3.session import Session
-from botocore.client import Config
-import requests
 
 # 进程数
 sem = threading.Semaphore(20)
 
-s3endpoint = 'https://s3.bitiful.net' # 请填入控制台 “Bucket 设置” 页面底部的 “Endpoint” 标签中的信息
+s3endpoint = 'https://s3.bitiful.net'  # 请填入控制台 “Bucket 设置” 页面底部的 “Endpoint” 标签中的信息
 s3region = 'cn-east-1'
 s3accessKeyId = 'vyt4LWvM7FB9mueN8qlwPKEh'
 s3SecretKeyId = '3TBwPBt6h5llcryRSYA7j3JsGLKP7GC'
+
+s3_prefix = 'https://ai-results.s3.bitiful.net'
 
 
 class S3(object):
@@ -42,7 +43,6 @@ class S3(object):
         self.s3_bucket = session.resource('s3', endpoint_url=s3endpoint).Bucket(bucket_name)
         self.resource = session.resource('s3', endpoint_url=s3endpoint)
         self.q = Queue()
-
 
     def _upload_file(self, file_path=None, object_name=None, que=None):
         """
@@ -156,7 +156,6 @@ class S3(object):
             return False
 
 
-
 if __name__ == '__main__':
-    res = S3().upload_file(file_path='/Users/a1/Desktop/fast-api-template/Image-2-video 14B 720P.webp', object_name='1.webp')
+    res = S3().upload_file(file_path=r"C:\Users\yinjg\Downloads\20250319-232054.png", object_name='1.webp')
     print(res)
